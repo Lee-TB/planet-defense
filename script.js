@@ -1,10 +1,27 @@
+class Player {
+  constructor(game) {
+    this.game = game;
+    this.x = this.game.width * 0.5;
+    this.y = this.game.height * 0.5;
+    this.radius = 40;
+    this.image = document.getElementById("player");
+  }
+  draw(context) {
+    context.drawImage(this.image, this.x - this.radius, this.y - this.radius);
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    context.stroke();
+  }
+  update() {}
+}
+
 class Planet {
   constructor(game) {
     this.game = game;
     this.x = this.game.width * 0.5;
     this.y = this.game.height * 0.5;
     this.radius = 100 * this.game.scale;
-    this.image = planet;
+    this.image = document.getElementById("planet");
   }
 
   draw(context) {
@@ -29,6 +46,8 @@ class Game {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.planet = new Planet(this);
+    this.player = new Player(this);
+
     this.mouse = {
       x: 0,
       y: 0,
@@ -41,6 +60,9 @@ class Game {
 
   render(context) {
     this.planet.draw(context);
+    this.player.draw(context);
+    this.player.update();
+
     context.beginPath();
     context.moveTo(this.planet.x, this.planet.y);
     context.lineTo(this.mouse.x, this.mouse.y);
@@ -52,8 +74,8 @@ window.addEventListener("load", function () {
   const canvas = this.document.getElementById("canvas1");
   const ctx = canvas.getContext("2d");
 
-  const scale = Math.min(800, window.innerWidth, window.innerHeight)/ 800;
-  canvas.scale = scale
+  const scale = Math.min(800, window.innerWidth, window.innerHeight) / 800;
+  canvas.scale = scale;
   canvas.width = 800 * canvas.scale;
   canvas.height = 800 * canvas.scale;
 
