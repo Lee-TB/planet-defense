@@ -19,19 +19,21 @@ class Player {
       this.radius * 2,
       this.radius * 2
     );
-    context.beginPath();
-    context.arc(0, 0, this.radius, 0, Math.PI * 2);
-    context.stroke();
+    if (this.game.debug) {
+      context.beginPath();
+      context.arc(0, 0, this.radius, 0, Math.PI * 2);
+      context.stroke();
+    }
     context.restore();
   }
   update() {
     this.aim = this.game.calcAim(this.game.mouse, this.game.planet);
     this.x =
       this.game.planet.x +
-      (this.game.planet.radius + this.radius) * this.aim.aimX;
+      (this.game.planet.radius * 0.8 + this.radius) * this.aim.aimX;
     this.y =
       this.game.planet.y +
-      (this.game.planet.radius + this.radius) * this.aim.aimY;
+      (this.game.planet.radius * 0.8 + this.radius) * this.aim.aimY;
     this.angle = Math.atan2(-this.aim.dy, -this.aim.dx);
   }
 }
@@ -53,10 +55,12 @@ class Planet {
       this.radius * 2,
       this.radius * 2
     );
-    context.strokeStyle = "red";
-    context.beginPath();
-    context.arc(this.x, this.y, this.radius * 0.8, 0, Math.PI * 2);
-    context.stroke();
+
+    if (this.game.debug) {
+      context.beginPath();
+      context.arc(this.x, this.y, this.radius * 0.8, 0, Math.PI * 2);
+      context.stroke();
+    }
   }
 }
 
@@ -68,6 +72,7 @@ class Game {
     this.height = this.canvas.height;
     this.planet = new Planet(this);
     this.player = new Player(this);
+    this.debug = false;
 
     this.mouse = {
       x: 0,
@@ -77,6 +82,12 @@ class Game {
       this.mouse.x = e.offsetX;
       this.mouse.y = e.offsetY;
     });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "d") {
+        this.debug = !this.debug;
+      }
+    });
   }
 
   render(context) {
@@ -84,10 +95,13 @@ class Game {
     this.player.draw(context);
     this.player.update();
 
-    context.beginPath();
-    context.moveTo(this.planet.x, this.planet.y);
-    context.lineTo(this.mouse.x, this.mouse.y);
-    context.stroke();
+    if (this.debug) {
+      context.beginPath();
+      context.strokeStyle = "red";
+      context.moveTo(this.planet.x, this.planet.y);
+      context.lineTo(this.mouse.x, this.mouse.y);
+      context.stroke();
+    }
   }
 
   calcAim(a, b) {
