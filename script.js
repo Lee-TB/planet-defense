@@ -6,18 +6,23 @@ class Player {
     this.radius = 40 * this.game.scale;
     this.image = document.getElementById("player");
     this.aim;
+    this.angle = Math.PI * 0;
   }
   draw(context) {
+    context.save();
+    context.translate(this.x, this.y);
+    context.rotate(this.angle);
     context.drawImage(
       this.image,
-      this.x - this.radius,
-      this.y - this.radius,
+      0 - this.radius,
+      0 - this.radius,
       this.radius * 2,
       this.radius * 2
     );
     context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    context.arc(0, 0, this.radius, 0, Math.PI * 2);
     context.stroke();
+    context.restore();
   }
   update() {
     this.aim = this.game.calcAim(this.game.mouse, this.game.planet);
@@ -27,6 +32,7 @@ class Player {
     this.y =
       this.game.planet.y +
       (this.game.planet.radius + this.radius) * this.aim.aimY;
+    this.angle = Math.atan2(-this.aim.dy, -this.aim.dx);
   }
 }
 
