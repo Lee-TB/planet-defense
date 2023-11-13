@@ -26,6 +26,7 @@ class Player {
     }
     context.restore();
   }
+
   update() {
     this.aim = this.game.calcAim(this.game.mouse, this.game.planet);
     this.x =
@@ -34,7 +35,19 @@ class Player {
     this.y =
       this.game.planet.y +
       (this.game.planet.radius * 0.8 + this.radius) * this.aim.aimY;
-    this.angle = Math.atan2(-this.aim.dy, -this.aim.dx);
+    this.angle = Math.atan2(this.aim.dy * -1, this.aim.dx * -1);
+  }
+
+  shoot() {
+    const projectile = this.game.getProjectile();
+    if (projectile) {
+      projectile.start(
+        this.x + this.aim.aimX * this.radius,
+        this.y + this.aim.aimY * this.radius,
+        this.aim.aimX,
+        this.aim.aimY
+      );
+    }
   }
 }
 
@@ -64,23 +77,87 @@ class Planet {
   }
 }
 
+class Projectile {
+  constructor(game) {
+    this.game = game;
+    this.x;
+    this.y;
+    this.speedX;
+    this.speedY;
+    this.speedModifier = 2;
+    this.radius = 4 * this.game.scale;
+    this.free = true;
+  }
+
+  start(x, y, speedX, speedY) {
+    this.free = false;
+    this.x = x;
+    this.y = y;
+    this.speedX = speedX * this.speedModifier;
+    this.speedY = speedY * this.speedModifier;
+  }
+
+  reset() {
+    this.free = true;
+  }
+
+  draw(context) {
+    if (!this.free) {
+      context.save();
+      context.beginPath();
+      context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      context.fillStyle = "gold";
+      context.fill();
+      context.restore();
+    }
+  }
+
+  update() {
+    if (!this.free) {
+      this.x += this.speedX;
+      this.y += this.speedY;
+    }
+
+    // reset projectile if it move outside the visible game area.
+    if (
+      this.x < 0 ||
+      this.x > this.game.width ||
+      this.y < 0 ||
+      this.y > this.game.height
+    ) {
+      this.reset();
+    }
+  }
+}
+
 class Game {
   constructor(canvas) {
     this.canvas = canvas;
-    this.scale = this.canvas.scale;
+    this.scale = this.canvas.scale * 0.8;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.planet = new Planet(this);
     this.player = new Player(this);
     this.debug = false;
+    this.projectilePool = [];
+    this.numberOfProjectiles = 30;
+    this.createProjectilePool();
 
     this.mouse = {
       x: 0,
       y: 0,
     };
-    this.canvas.addEventListener("mousemove", (e) => {
+
+    // event listeners
+    window.addEventListener("mousemove", (e) => {
       this.mouse.x = e.offsetX;
       this.mouse.y = e.offsetY;
+    });
+
+    window.addEventListener("mousedown", (e) => {
+      this.mouse.x = e.offsetX;
+      this.mouse.y = e.offsetY;
+      this.player.shoot();
     });
 
     window.addEventListener("keydown", (e) => {
@@ -94,6 +171,10 @@ class Game {
     this.planet.draw(context);
     this.player.draw(context);
     this.player.update();
+    this.projectilePool.forEach((projectile) => {
+      projectile.draw(context);
+      projectile.update();
+    });
 
     if (this.debug) {
       context.beginPath();
@@ -111,6 +192,18 @@ class Game {
     const aimX = dx / distance;
     const aimY = dy / distance;
     return { aimX, aimY, dx, dy };
+  }
+
+  createProjectilePool() {
+    for (let i = 0; i < this.numberOfProjectiles; i++) {
+      this.projectilePool.push(new Projectile(this));
+    }
+  }
+
+  getProjectile() {
+    for (let i = 0; i < this.numberOfProjectiles; i++) {
+      if (this.projectilePool[i].free) return this.projectilePool[i];
+    }
   }
 }
 
