@@ -1,6 +1,7 @@
 import { Player } from "./player.js";
 import { Planet } from "./planet.js";
 import { Projectile } from "./projectile.js";
+import { Enemy } from "./enemy.js";
 
 class Game {
   constructor(canvas) {
@@ -11,9 +12,14 @@ class Game {
     this.planet = new Planet(this);
     this.player = new Player(this);
     this.debug = false;
+
     this.projectilePool = [];
     this.numberOfProjectiles = 30;
     this.createProjectilePool();
+
+    this.enemyPool = [];
+    this.numberOfEnemies = 20;
+    this.createEnemyPool();    
 
     this.mouse = {
       x: 0,
@@ -23,13 +29,13 @@ class Game {
     // event listeners
     window.addEventListener("mousemove", (e) => {
       this.mouse.x = e.offsetX;
-      this.mouse.y = e.offsetY;
+      this.mouse.y = e.offsetY;      
     });
 
     window.addEventListener("mousedown", (e) => {
       this.mouse.x = e.offsetX;
       this.mouse.y = e.offsetY;
-      this.player.shoot();
+      this.player.shoot();      
     });
 
     window.addEventListener("keydown", (e) => {
@@ -46,6 +52,10 @@ class Game {
     this.projectilePool.forEach((projectile) => {
       projectile.draw(context);
       projectile.update();
+    });
+    this.enemyPool.forEach((enemy) => {
+      enemy.draw(context);
+      enemy.update();
     });
 
     if (this.debug) {
@@ -75,6 +85,18 @@ class Game {
   getProjectile() {
     for (let i = 0; i < this.numberOfProjectiles; i++) {
       if (this.projectilePool[i].free) return this.projectilePool[i];
+    }
+  }
+
+  createEnemyPool() {
+    for (let i = 0; i < this.numberOfEnemies; i++) {
+      this.enemyPool.push(new Enemy(this));
+    }
+  }
+
+  getEnemy() {
+    for (let i = 0; i < this.numberOfEnemies; i++) {
+      if (this.enemyPool[i].free) return this.enemyPool[i];
     }
   }
 }
