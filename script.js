@@ -18,7 +18,7 @@ class Game {
     this.createProjectilePool();
 
     this.enemyPool = [];
-    this.numberOfEnemies = 20;
+    this.numberOfEnemies = 5;
     this.createEnemyPool();    
 
     this.mouse = {
@@ -35,7 +35,11 @@ class Game {
     window.addEventListener("mousedown", (e) => {
       this.mouse.x = e.offsetX;
       this.mouse.y = e.offsetY;
-      this.player.shoot();      
+      this.player.shoot();
+      const enemy = this.getEnemy();
+      if(enemy)
+      enemy.start();
+      console.log(this.enemyPool);
     });
 
     window.addEventListener("keydown", (e) => {
@@ -74,6 +78,14 @@ class Game {
     const aimX = dx / distance;
     const aimY = dy / distance;
     return { aimX, aimY, dx, dy };
+  }
+
+  checkCollision(a, b) {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    const distance = Math.hypot(dx, dy);
+    const sumOfRadii = a.radius + b.radius;
+    return distance < sumOfRadii;
   }
 
   createProjectilePool() {

@@ -1,7 +1,7 @@
 export class Enemy {
   constructor(game) {
     this.game = game;
-    this.radius = 80 * this.game.scale;
+    this.radius = 40 * this.game.scale;
     this.width = this.radius * 2;
     this.height = this.radius * 2;
     this.x;
@@ -43,12 +43,10 @@ export class Enemy {
       this.y += this.speedY;
     }
 
-    // reset enemy if it move outside the visible game area.
+    // reset if it collide with planet or player
     if (
-      this.x < 0 ||
-      this.x > this.game.width ||
-      this.y < 0 ||
-      this.y > this.game.height
+      this.game.checkCollision(this, this.game.planet) ||
+      this.game.checkCollision(this, this.game.player)
     ) {
       this.reset();
     }
