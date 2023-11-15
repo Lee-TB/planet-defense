@@ -19,7 +19,13 @@ class Game {
 
     this.enemyPool = [];
     this.numberOfEnemies = 5;
-    this.createEnemyPool();    
+    this.createEnemyPool();
+    this.enemyTimer = 0;
+    this.enemyInterval = 100;
+
+    this.fps = 60;
+    this.gameInterval = 1000 / this.fps;
+    this.gameTimer = 0;
 
     this.mouse = {
       x: 0,
@@ -29,17 +35,13 @@ class Game {
     // event listeners
     window.addEventListener("mousemove", (e) => {
       this.mouse.x = e.offsetX;
-      this.mouse.y = e.offsetY;      
+      this.mouse.y = e.offsetY;
     });
 
     window.addEventListener("mousedown", (e) => {
       this.mouse.x = e.offsetX;
       this.mouse.y = e.offsetY;
       this.player.shoot();
-      const enemy = this.getEnemy();
-      if(enemy)
-      enemy.start();
-      console.log(this.enemyPool);
     });
 
     window.addEventListener("keydown", (e) => {
@@ -49,25 +51,42 @@ class Game {
     });
   }
 
-  render(context) {
-    this.planet.draw(context);
-    this.player.draw(context);
-    this.player.update();
-    this.projectilePool.forEach((projectile) => {
-      projectile.draw(context);
-      projectile.update();
-    });
-    this.enemyPool.forEach((enemy) => {
-      enemy.draw(context);
-      enemy.update();
-    });
+  render(context, deltaTime) {
+    this.gameTimer += deltaTime;
+    if (this.gameTimer > this.gameInterval) {
+      this.gameTimer = 0;
 
-    if (this.debug) {
-      context.beginPath();
-      context.strokeStyle = "red";
-      context.moveTo(this.planet.x, this.planet.y);
-      context.lineTo(this.mouse.x, this.mouse.y);
-      context.stroke();
+      context.clearRect(0, 0, this.width, this.height);
+      this.planet.draw(context);
+      this.player.draw(context);
+      this.player.update();
+      this.projectilePool.forEach((projectile) => {
+        projectile.draw(context);
+        projectile.update();
+      });
+      this.enemyPool.forEach((enemy) => {
+        enemy.draw(context);
+        enemy.update();
+      });
+
+      // periodically activate an enemy
+      if (this.enemyTimer < this.enemyInterval) {
+        this.enemyTimer += deltaTime;
+      } else {
+        this.enemyTimer = 0;
+        const enemy = this.getEnemy();
+        if (enemy) {
+          enemy.start();
+        }
+      }
+
+      if (this.debug) {
+        context.beginPath();
+        context.strokeStyle = "red";
+        context.moveTo(this.planet.x, this.planet.y);
+        context.lineTo(this.mouse.x, this.mouse.y);
+        context.stroke();
+      }
     }
   }
 
@@ -125,9 +144,13 @@ window.addEventListener("load", function () {
   const game = new Game(canvas);
 
   let requestID;
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    game.render(ctx);
+  let lastTime = 0;
+  function animate(timeStamp = 0) {
+    const deltaTime = timeStamp - lastTime;
+    lastTime = timeStamp;
+
+    game.render(ctx, deltaTime);
+
     requestID = window.requestAnimationFrame(animate);
   }
   requestID = window.requestAnimationFrame(animate);
