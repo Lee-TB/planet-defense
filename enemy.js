@@ -32,10 +32,9 @@ export class Enemy {
       this.y = Math.random() * this.game.height;
     }
     const aim = this.game.calcAim(this, this.game.planet);
-    this.speedX = -aim.aimX;
-    this.speedY = -aim.aimY;
-    this.angle = Math.atan2(-aim.dx, -aim.dy) * -1
-    console.log(this.angle);
+    this.speedX = -aim.aimX * this.game.speedModifier;
+    this.speedY = -aim.aimY * this.game.speedModifier;
+    this.angle = Math.atan2(-aim.dx, -aim.dy) * -1    
   }
 
   reset() {

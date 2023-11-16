@@ -2,6 +2,7 @@ import { Player } from "./player.js";
 import { Planet } from "./planet.js";
 import { Projectile } from "./projectile.js";
 import { Lobstermorph } from "./lobstermorph.js";
+import { Asteroid } from "./asteroid.js";
 
 export class Game {
   constructor(canvas) {
@@ -13,6 +14,10 @@ export class Game {
     this.player = new Player(this);
     this.debug = false;
 
+    this.baseRefreshRate = 60; // you can choose 60 or 144 and adjust other properties
+    this.fps = 60;
+    this.speedModifier = this.baseRefreshRate / this.fps;
+
     this.projectilePool = [];
     this.numberOfProjectiles = 30;
     this.createProjectilePool();
@@ -21,15 +26,11 @@ export class Game {
     this.numberOfEnemies = 20;
     this.createEnemyPool();
     this.enemyTimer = 0;
-    this.enemyInterval = 500;
+    this.enemyInterval = 2000;
 
     this.spriteTimer = 0;
     this.spriteInterval = 50;
     this.spriteUpdate = true;
-
-    this.fps = 60;
-    this.gameInterval = 1000 / this.fps;
-    this.gameTimer = 0;
 
     this.mouse = {
       x: 0,
@@ -56,50 +57,48 @@ export class Game {
   }
 
   render(context, deltaTime) {
-    this.gameTimer += deltaTime;
-    if (this.gameTimer > this.gameInterval) {
-      this.gameTimer = 0;
+    this.fps = 1000 / deltaTime; // this fps will be changed depending on your screen refresh rate
+    this.speedModifier = this.baseRefreshRate / this.fps;    
 
-      context.clearRect(0, 0, this.width, this.height);
-      this.planet.draw(context);
-      this.player.draw(context);
-      this.player.update();
-      this.projectilePool.forEach((projectile) => {
-        projectile.draw(context);
-        projectile.update();
-      });
-      this.enemyPool.forEach((enemy) => {
-        enemy.draw(context);
-        enemy.update();
-      });
+    context.clearRect(0, 0, this.width, this.height);
+    this.planet.draw(context);
+    this.player.draw(context);
+    this.player.update();
+    this.projectilePool.forEach((projectile) => {
+      projectile.draw(context);
+      projectile.update();
+    });
+    this.enemyPool.forEach((enemy) => {
+      enemy.draw(context);
+      enemy.update();
+    });
 
-      // periodically activate an enemy
-      if (this.enemyTimer < this.enemyInterval) {
-        this.enemyTimer += deltaTime;
-      } else {
-        this.enemyTimer = 0;
-        const enemy = this.getEnemy();
-        if (enemy) {
-          enemy.start();
-        }
+    // periodically activate an enemy
+    if (this.enemyTimer < this.enemyInterval) {
+      this.enemyTimer += deltaTime;
+    } else {
+      this.enemyTimer = 0;
+      const enemy = this.getEnemy();
+      if (enemy) {
+        enemy.start();
       }
+    }
 
-      // periodically update sprite
-      if(this.spriteTimer > this.spriteInterval) {
-        this.spriteTimer = 0;
-        this.spriteUpdate = true;
-      } else {
-        this.spriteTimer += deltaTime;
-        this.spriteUpdate = false;
-      }
+    // periodically update sprite
+    if (this.spriteTimer > this.spriteInterval) {
+      this.spriteTimer = 0;
+      this.spriteUpdate = true;
+    } else {
+      this.spriteTimer += deltaTime;
+      this.spriteUpdate = false;
+    }
 
-      if (this.debug) {
-        context.beginPath();
-        context.strokeStyle = "red";
-        context.moveTo(this.planet.x, this.planet.y);
-        context.lineTo(this.mouse.x, this.mouse.y);
-        context.stroke();
-      }
+    if (this.debug) {
+      context.beginPath();
+      context.strokeStyle = "red";
+      context.moveTo(this.planet.x, this.planet.y);
+      context.lineTo(this.mouse.x, this.mouse.y);
+      context.stroke();
     }
   }
 
