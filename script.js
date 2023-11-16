@@ -1,12 +1,12 @@
 import { Player } from "./player.js";
 import { Planet } from "./planet.js";
 import { Projectile } from "./projectile.js";
-import { Enemy } from "./enemy.js";
+import { Asteroid } from "./asteroid.js";
 
 class Game {
   constructor(canvas) {
     this.canvas = canvas;
-    this.scale = this.canvas.scale * 0.8;
+    this.scale = this.canvas.scale * 0.6;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.planet = new Planet(this);
@@ -18,10 +18,14 @@ class Game {
     this.createProjectilePool();
 
     this.enemyPool = [];
-    this.numberOfEnemies = 5;
+    this.numberOfEnemies = 20;
     this.createEnemyPool();
     this.enemyTimer = 0;
-    this.enemyInterval = 100;
+    this.enemyInterval = 500;
+
+    this.spriteTimer = 0;
+    this.spriteInterval = 50;
+    this.spriteUpdate = true;
 
     this.fps = 60;
     this.gameInterval = 1000 / this.fps;
@@ -80,6 +84,15 @@ class Game {
         }
       }
 
+      // periodically update sprite
+      if(this.spriteTimer > this.spriteInterval) {
+        this.spriteTimer = 0;
+        this.spriteUpdate = true;
+      } else {
+        this.spriteTimer += deltaTime;
+        this.spriteUpdate = false;
+      }
+
       if (this.debug) {
         context.beginPath();
         context.strokeStyle = "red";
@@ -121,7 +134,7 @@ class Game {
 
   createEnemyPool() {
     for (let i = 0; i < this.numberOfEnemies; i++) {
-      this.enemyPool.push(new Enemy(this));
+      this.enemyPool.push(new Asteroid(this));
     }
   }
 
@@ -142,7 +155,7 @@ window.addEventListener("load", function () {
   canvas.height = 800 * canvas.scale;
 
   const game = new Game(canvas);
-
+  
   let requestID;
   let lastTime = 0;
   function animate(timeStamp = 0) {
