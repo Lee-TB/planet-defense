@@ -34,6 +34,8 @@ export class Enemy {
     const aim = this.game.calcAim(this, this.game.planet);
     this.speedX = -aim.aimX;
     this.speedY = -aim.aimY;
+    this.angle = Math.atan2(-aim.dx, -aim.dy) * -1
+    console.log(this.angle);
   }
 
   reset() {
@@ -50,6 +52,11 @@ export class Enemy {
 
   draw(context) {
     if (!this.free) {
+      context.save();
+      context.translate(this.x, this.y);
+      context.rotate(this.angle)
+      context.translate(-this.x, -this.y);
+
       context.drawImage(
         this.image,
         this.frameX * this.spriteWidth,
@@ -61,6 +68,7 @@ export class Enemy {
         this.width,
         this.height
       );
+      context.restore();
 
       if (this.game.debug) {
         context.save();
@@ -87,6 +95,8 @@ export class Enemy {
     // check collision enemy / planet
     if (this.game.checkCollision(this, this.game.planet)) {
       this.lives = 0;
+      this.speedX = 0;
+      this.speedY = 0;
     }
 
     // check collision enemy / player
@@ -96,7 +106,11 @@ export class Enemy {
 
     // check collision enemy / projectile
     this.game.projectilePool.forEach((projectile) => {
-      if (!projectile.free && this.game.checkCollision(this, projectile) && this.lives > 0) {
+      if (
+        !projectile.free &&
+        this.game.checkCollision(this, projectile) &&
+        this.lives > 0
+      ) {
         projectile.reset();
         this.hit(1);
       }
