@@ -1,10 +1,10 @@
 import { Player } from "./player.js";
 import { Planet } from "./planet.js";
 import { Projectile } from "./projectile.js";
-import { Lobstermorph } from "./lobstermorph.js";
-import { Asteroid } from "./asteroid.js";
-import { Beetlemorph } from "./beetlemorph.js";
-import { Rhinomorph } from "./rhinomorph.js";
+import { Lobstermorph } from "./enemy/lobstermorph.js";
+import { Asteroid } from "./enemy/asteroid.js";
+import { Beetlemorph } from "./enemy/beetlemorph.js";
+import { Rhinomorph } from "./enemy/rhinomorph.js";
 
 export class Game {
   constructor(canvas) {

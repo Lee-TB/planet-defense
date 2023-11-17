@@ -1,4 +1,4 @@
-import { Game } from "./game.js";
+import { Game } from "./src/game.js";
 
 window.addEventListener("load", function () {
   const canvas = this.document.getElementById("canvas1");
