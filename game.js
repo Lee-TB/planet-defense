@@ -111,7 +111,6 @@ export class Game {
 
     if (this.lives < 1) {
       this.gameOver = true;
-      this.player.damage = 0;
     }
 
     if (this.debug) {

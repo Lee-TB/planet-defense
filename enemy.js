@@ -127,7 +127,7 @@ export class Enemy {
 
     // when enemy die
     if (this.frameX > this.maxFrame) {
-      if (!this.collided) {
+      if (!this.collided && !this.game.gameOver) {
         this.game.score += this.maxLives;        
       }
       this.reset();
