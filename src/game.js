@@ -12,29 +12,31 @@ export class Game {
     this.scale = this.canvas.scale * 0.8;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    
+
     this.baseRefreshRate = 60; // you can choose 60 or 144 and adjust other properties
     this.fps = 60;
-    this.speedModifier = (this.baseRefreshRate / this.fps) * this.scale;    
+    this.speedModifier = (this.baseRefreshRate / this.fps) * this.scale;
     this.projectilePool = [];
     this.numberOfProjectiles = 30;
     this.createProjectilePool();
-    
+
     this.enemyPool = [];
     this.numberOfEnemies = 20;
     this.createEnemyPool();
     this.enemyIntervalOrigin = 2000;
     this.enemyTimer = 0;
     this.enemyInterval = this.enemyIntervalOrigin;
-    
+
     this.spriteTimer = 0;
     this.spriteInterval = 100;
     this.spriteUpdate = true;
-    
-    this.lives = 5;
+
+    this.maxLives = 10;
+    this.lives = this.maxLives;
     this.score = 0;
     this.gameOver = false;
     this.debug = false;
+    this.timer = 0;
 
     this.mouse = {
       x: 0,
@@ -64,6 +66,8 @@ export class Game {
   }
 
   render(context, deltaTime) {
+    this.timer += deltaTime;
+
     this.fps = 1000 / deltaTime; // this fps will be changed depending on your screen refresh rate
     this.speedModifier = (this.baseRefreshRate / this.fps) * this.scale;
 
@@ -83,7 +87,7 @@ export class Game {
 
     // increase level of difficult by increase speed of enemy generation
     if (this.enemyInterval > 1000) {
-      this.enemyInterval = this.enemyIntervalOrigin - this.score * 5;
+      this.enemyInterval = this.enemyIntervalOrigin - this.score * 10;
     }
 
     // periodically activate an enemy
@@ -129,17 +133,28 @@ export class Game {
 
   drawStatusText(context) {
     context.save();
-    // Game score
     context.textAlign = "left";
     context.font = `${24 * this.scale}px Impact`;
     context.fillStyle = "white";
-    context.fillText(`Score ${this.score}`, 20 * this.scale, 40 * this.scale);
+    // Game time
+    context.fillText(`Time  ${Math.floor(this.timer/1000/60)} : ${(this.timer/1000%60).toFixed(2)}`, 20 * this.scale, 40 * this.scale);
+    // Game score
+    context.fillText(`Score ${this.score}`, 20 * this.scale, 70 * this.scale);
 
     // Game lives
     for (let i = 0; i < this.lives; i++) {
       context.fillRect(
-        (20 + 10 * i) * this.scale,
-        50 * this.scale,
+        (20 + 12 * i) * this.scale,
+        80 * this.scale,
+        8 * this.scale,
+        20 * this.scale
+      );
+    }
+    context.strokeStyle = "white";
+    for (let i = 0; i < this.maxLives; i++) {
+      context.strokeRect(
+        (20 + 12 * i) * this.scale,
+        80 * this.scale,
         8 * this.scale,
         20 * this.scale
       );
