@@ -20,6 +20,7 @@ export class Enemy {
     this.speedX;
     this.speedY;
     this.free = true;
+    this.collided = false;
   }
 
   start() {
@@ -34,11 +35,12 @@ export class Enemy {
     const aim = this.game.calcAim(this, this.game.planet);
     this.speedX = -aim.aimX * this.game.speedModifier;
     this.speedY = -aim.aimY * this.game.speedModifier;
-    this.angle = Math.atan2(-aim.dx, -aim.dy) * -1    
+    this.angle = Math.atan2(-aim.dx, -aim.dy) * -1;
   }
 
   reset() {
     this.free = true;
+    this.collided = false;
     this.lives = this.maxLives;
     this.frameX = 0;
     this.x = Infinity;
@@ -53,7 +55,7 @@ export class Enemy {
     if (!this.free) {
       context.save();
       context.translate(this.x, this.y);
-      context.rotate(this.angle)
+      context.rotate(this.angle);
       context.translate(-this.x, -this.y);
 
       context.drawImage(
@@ -75,10 +77,10 @@ export class Enemy {
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         context.strokeStyle = "red";
         context.stroke();
-        context.fillStyle = "red";
-        context.font = "20px consolas";
         context.textAlign = "center";
         context.textBaseline = "middle";
+        context.font = "20px consolas";
+        context.fillStyle = "white";
         context.fillText(this.lives, this.x, this.y);
         context.restore();
       }
@@ -92,15 +94,19 @@ export class Enemy {
     }
 
     // check collision enemy / planet
-    if (this.game.checkCollision(this, this.game.planet)) {
+    if (this.game.checkCollision(this, this.game.planet) && this.lives > 0) {
       this.lives = 0;
+      this.collided = true;
+      this.game.lives--;
       this.speedX = 0;
       this.speedY = 0;
     }
 
     // check collision enemy / player
-    if (this.game.checkCollision(this, this.game.player)) {
+    if (this.game.checkCollision(this, this.game.player) && this.lives > 0) {
       this.lives = 0;
+      this.collided = true;
+      this.game.lives--;
     }
 
     // check collision enemy / projectile
@@ -111,7 +117,7 @@ export class Enemy {
         this.lives > 0
       ) {
         projectile.reset();
-        this.hit(1);
+        this.hit(this.game.player.damage);
       }
     });
 
@@ -119,7 +125,11 @@ export class Enemy {
       this.frameX++;
     }
 
+    // when enemy die
     if (this.frameX > this.maxFrame) {
+      if (!this.collided) {
+        this.game.score += this.maxLives;        
+      }
       this.reset();
     }
   }

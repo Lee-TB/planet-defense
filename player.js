@@ -7,6 +7,7 @@ export class Player {
       this.image = document.getElementById("player");
       this.aim;
       this.angle = Math.PI * 0;
+      this.damage = 1;
     }
     draw(context) {
       context.save();
