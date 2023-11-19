@@ -5,6 +5,7 @@ export class Player {
       this.y = this.game.height * 0.5;
       this.radius = 40 * this.game.scale;
       this.image = document.getElementById("player");
+      this.sound = document.getElementById("playerShootSound");
       this.aim;
       this.angle = Math.PI * 0;
       this.damage = 1;
@@ -48,6 +49,9 @@ export class Player {
           this.aim.aimX,
           this.aim.aimY
         );
+        this.sound.volume = this.game.soundVolume;
+        this.sound.load();
+        this.sound.play();
       }
     }
   }
