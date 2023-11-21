@@ -9,7 +9,7 @@ import { Rhinomorph } from "./enemy/rhinomorph.js";
 export class Game {
   constructor(canvas) {
     this.canvas = canvas;
-    this.scale = this.canvas.scale * 0.8;
+    this.scale = this.canvas.scale * 0.6;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
 
@@ -37,6 +37,7 @@ export class Game {
     this.gameOver = false;
     this.debug = false;
     this.timer = 0;
+    this.soundVolume = 0.5;
 
     this.mouse = {
       x: 0,
@@ -86,9 +87,7 @@ export class Game {
     });
 
     // increase level of difficult by increase speed of enemy generation
-    if (this.enemyInterval > 1000) {
-      this.enemyInterval = this.enemyIntervalOrigin - this.score * 10;
-    }
+    this.increaseGenerativeSpeedOfEnemy();    
 
     // periodically activate an enemy
     if (!this.gameOver) {
@@ -137,7 +136,14 @@ export class Game {
     context.font = `${24 * this.scale}px Impact`;
     context.fillStyle = "white";
     // Game time
-    context.fillText(`Time  ${Math.floor(this.timer/1000/60)} : ${(this.timer/1000%60).toFixed(2)}`, 20 * this.scale, 40 * this.scale);
+    context.fillText(
+      `Time  ${Math.floor(this.timer / 1000 / 60)} : ${(
+        (this.timer / 1000) %
+        60
+      ).toFixed(2)}`,
+      20 * this.scale,
+      40 * this.scale
+    );
     // Game score
     context.fillText(`Score ${this.score}`, 20 * this.scale, 70 * this.scale);
 
@@ -169,7 +175,7 @@ export class Game {
       context.fillStyle = "white";
 
       context.fillText(message1, this.width / 2, 200 * this.scale);
-      context.fillText(message2, this.width / 2, 700 * this.scale);
+      context.fillText(message2, this.width / 2, 1000 * this.scale);
     }
     context.restore();
   }
@@ -205,12 +211,7 @@ export class Game {
 
   createEnemyPool() {
     for (let i = 0; i < this.numberOfEnemies; i++) {
-      const randomNumber = Math.random();
-      if (randomNumber > 0.25) {
-        this.enemyPool.push(new Rhinomorph(this));
-      } else {
-        this.enemyPool.push(new Lobstermorph(this));
-      }
+      this.enemyPool.push(new Rhinomorph(this));
     }
   }
 
@@ -218,5 +219,12 @@ export class Game {
     for (let i = 0; i < this.numberOfEnemies; i++) {
       if (this.enemyPool[i].free) return this.enemyPool[i];
     }
+  }
+
+  increaseGenerativeSpeedOfEnemy() {
+    if (this.enemyInterval > 500) {
+      this.enemyInterval = this.enemyIntervalOrigin - 10 * this.score;
+    }
+    // console.log(this.enemyInterval);
   }
 }
