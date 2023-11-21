@@ -5,7 +5,7 @@ body {
 
 #canvas1 {
   border: 3px solid black;
-  background: url("assets/background.png");
+  background: url("assets/images/background.png");
   background-size: cover;
   position: absolute;
   top: 50%;
