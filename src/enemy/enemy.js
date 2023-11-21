@@ -23,6 +23,7 @@ export class Enemy {
     this.collided = false;
 
     this.enemyExplosionSound = document.getElementById("enemyExplosionSound");
+    this.enemyExplosionSound.soundReady = true;
     this.enemyHitSound = document.getElementById("enemyHitSound");
   }
 
@@ -43,6 +44,7 @@ export class Enemy {
 
   reset() {
     this.free = true;
+    this.enemyExplosionSound.soundReady = true;
     this.collided = false;
     this.lives = this.maxLives;
     this.frameX = 0;
@@ -127,18 +129,26 @@ export class Enemy {
       }
     });
 
+    // enemy die
     if (this.lives < 1 && this.game.spriteUpdate) {
       this.frameX++;
-      this.enemyExplosionSound.volume = this.game.soundVolume;
-      this.enemyExplosionSound.play();
+      this.playExplosion();
     }
 
-    // when enemy die
+    // clear enemy
     if (this.frameX > this.maxFrame) {
       if (!this.collided && !this.game.gameOver) {
         this.game.score += this.maxLives;
       }
       this.reset();
+    }
+  }
+
+  playExplosion() {
+    if(this.enemyExplosionSound.soundReady) { // soundReady make sure this audio run only one time
+      this.enemyExplosionSound.soundReady = false;
+      this.enemyExplosionSound.volume = this.game.soundVolume;
+      this.enemyExplosionSound.play();
     }
   }
 }

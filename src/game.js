@@ -5,6 +5,7 @@ import { Lobstermorph } from "./enemy/lobstermorph.js";
 import { Asteroid } from "./enemy/asteroid.js";
 import { Beetlemorph } from "./enemy/beetlemorph.js";
 import { Rhinomorph } from "./enemy/rhinomorph.js";
+import { formatMinutes } from "./utils.js";
 
 export class Game {
   constructor(canvas) {
@@ -86,9 +87,6 @@ export class Game {
       enemy.update();
     });
 
-    // increase level of difficult by increase speed of enemy generation
-    this.increaseGenerativeSpeedOfEnemy();    
-
     // periodically activate an enemy
     if (!this.gameOver) {
       if (this.enemyTimer < this.enemyInterval) {
@@ -137,21 +135,28 @@ export class Game {
     context.fillStyle = "white";
     // Game time
     context.fillText(
-      `Time  ${Math.floor(this.timer / 1000 / 60)} : ${(
+      `Time`,
+      20 * this.scale,
+      40 * this.scale
+    );
+    context.fillText(
+      `${formatMinutes(Math.floor(this.timer / 1000 / 60))}  :  ${(
         (this.timer / 1000) %
         60
       ).toFixed(2)}`,
       20 * this.scale,
-      40 * this.scale
+      70 * this.scale
     );
     // Game score
-    context.fillText(`Score ${this.score}`, 20 * this.scale, 70 * this.scale);
+    context.fillText(`Score`, 20 * this.scale, 110 * this.scale);
+    context.fillText(`${this.score}`, 20 * this.scale, 140 * this.scale);
+
 
     // Game lives
     for (let i = 0; i < this.lives; i++) {
       context.fillRect(
         (20 + 12 * i) * this.scale,
-        80 * this.scale,
+        170 * this.scale,
         8 * this.scale,
         20 * this.scale
       );
@@ -160,7 +165,7 @@ export class Game {
     for (let i = 0; i < this.maxLives; i++) {
       context.strokeRect(
         (20 + 12 * i) * this.scale,
-        80 * this.scale,
+        170 * this.scale,
         8 * this.scale,
         20 * this.scale
       );
@@ -211,7 +216,7 @@ export class Game {
 
   createEnemyPool() {
     for (let i = 0; i < this.numberOfEnemies; i++) {
-      this.enemyPool.push(new Rhinomorph(this));
+      this.enemyPool.push(new Asteroid(this));
     }
   }
 
@@ -219,12 +224,5 @@ export class Game {
     for (let i = 0; i < this.numberOfEnemies; i++) {
       if (this.enemyPool[i].free) return this.enemyPool[i];
     }
-  }
-
-  increaseGenerativeSpeedOfEnemy() {
-    if (this.enemyInterval > 500) {
-      this.enemyInterval = this.enemyIntervalOrigin - 10 * this.score;
-    }
-    // console.log(this.enemyInterval);
   }
 }
