@@ -73,16 +73,21 @@ export class Game {
     this.fps = 1000 / deltaTime; // this fps will be changed depending on your screen refresh rate
     this.speedModifier = (this.baseRefreshRate / this.fps) * this.scale;
 
-    // DRAW AND UPDATE
+    // Render objects
     context.clearRect(0, 0, this.width, this.height);
     this.drawStatusText(context);
+
     this.planet.draw(context);
+    this.planet.update();
+
     this.player.draw(context);
     this.player.update();
+
     this.projectilePool.forEach((projectile) => {
       projectile.draw(context);
       projectile.update();
     });
+
     this.enemyPool.forEach((enemy) => {
       enemy.draw(context);
       enemy.update();
