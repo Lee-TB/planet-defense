@@ -22,7 +22,7 @@ export class Game {
     this.createProjectilePool();
 
     this.enemyPool = [];
-    this.numberOfEnemies = 20;
+    this.numberOfEnemies = 40;
     this.createEnemyPool();
     this.enemyIntervalOrigin = 2000;
     this.enemyTimer = 0;
@@ -73,6 +73,7 @@ export class Game {
     this.fps = 1000 / deltaTime; // this fps will be changed depending on your screen refresh rate
     this.speedModifier = (this.baseRefreshRate / this.fps) * this.scale;
 
+    // DRAW AND UPDATE
     context.clearRect(0, 0, this.width, this.height);
     this.drawStatusText(context);
     this.planet.draw(context);
@@ -93,6 +94,9 @@ export class Game {
         this.enemyTimer += deltaTime;
       } else {
         this.enemyTimer = 0;
+        if(this.enemyInterval > 1000) {
+          this.enemyInterval = this.enemyIntervalOrigin - this.score * 5;
+        }
         this.shuffle(this.enemyPool);
         const enemy = this.getEnemy();
         if (enemy) {
@@ -134,11 +138,7 @@ export class Game {
     context.font = `${24 * this.scale}px Impact`;
     context.fillStyle = "white";
     // Game time
-    context.fillText(
-      `Time`,
-      20 * this.scale,
-      40 * this.scale
-    );
+    context.fillText(`Time`, 20 * this.scale, 40 * this.scale);
     context.fillText(
       `${formatMinutes(Math.floor(this.timer / 1000 / 60))}  :  ${(
         (this.timer / 1000) %
@@ -150,7 +150,6 @@ export class Game {
     // Game score
     context.fillText(`Score`, 20 * this.scale, 110 * this.scale);
     context.fillText(`${this.score}`, 20 * this.scale, 140 * this.scale);
-
 
     // Game lives
     for (let i = 0; i < this.lives; i++) {
@@ -216,7 +215,16 @@ export class Game {
 
   createEnemyPool() {
     for (let i = 0; i < this.numberOfEnemies; i++) {
-      this.enemyPool.push(new Asteroid(this));
+      const randomNumber = Math.random();
+      if (randomNumber < 0.4) {
+        this.enemyPool.push(new Beetlemorph(this));
+      } else if (randomNumber < 0.8) {
+        this.enemyPool.push(
+          Math.random() < 0.5 ? new Rhinomorph(this) : new Asteroid(this)
+        );
+      } else {
+        this.enemyPool.push(new Lobstermorph(this));
+      }
     }
   }
 
