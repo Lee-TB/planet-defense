@@ -12,3 +12,27 @@ export function formatMinutes(minutes) {
     return minutes.toString();
   }
 }
+
+export function drawStartScreen(ctx, canvas) {
+  ctx.save();
+    ctx.drawImage(
+      background,
+      0,
+      0,
+      800,
+      800,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+    ctx.font = `${32 * canvas.scale}px Impact`;
+    ctx.textAlign = "center";
+    ctx.fillStyle = "white";
+    ctx.fillText(
+      "Press enter to play game",
+      canvas.width / 2,
+      canvas.height / 2
+    );
+    ctx.restore();
+}
