@@ -1,5 +1,11 @@
 # Planet Defense
+<p align="center">
+    <img src="https://github.com/Lee-TB/planet-defense/assets/86998194/797b15bb-f5cd-430d-9e8b-a3e679c7a19e" />
+</p>
 
-![image](https://github.com/Lee-TB/planet-defense/assets/86998194/3f721a2a-7ff9-4843-a262-f4c93ed120c9)
+## Gameplay 
 
+<p align="center">
+  <img src="https://github.com/Lee-TB/planet-defense/assets/86998194/4b13b895-6d70-4e4e-8749-710a44d5bb20" />
+</p>
 Learn from https://www.youtube.com/@Frankslaboratory
