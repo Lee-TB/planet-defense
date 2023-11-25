@@ -1,12 +1,16 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 body {
   cursor: url(./assets/images/crosshair.png) 16 16, auto;
   background-color: rgb(30, 30, 30);
 }
 
 #canvas1 {
-  border: 3px solid black;
-  background: url("./assets/images/background.png");
-  background-size: cover;
+  border: 3px solid #000000;
   position: absolute;
   top: 50%;
   left: 50%;

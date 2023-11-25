@@ -75,6 +75,18 @@ export class Game {
 
     // Render objects
     context.clearRect(0, 0, this.width, this.height);
+    context.drawImage(
+      background,
+      0,
+      0,
+      800,
+      800,
+      0,
+      0,
+      this.canvas.width,
+      this.canvas.height
+    );
+
     this.drawStatusText(context);
 
     this.planet.draw(context);
@@ -99,7 +111,7 @@ export class Game {
         this.enemyTimer += deltaTime;
       } else {
         this.enemyTimer = 0;
-        if(this.enemyInterval > 1000) {
+        if (this.enemyInterval > 1000) {
           this.enemyInterval = this.enemyIntervalOrigin - this.score * 5;
         }
         this.shuffle(this.enemyPool);
