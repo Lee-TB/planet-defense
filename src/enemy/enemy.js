@@ -102,7 +102,7 @@ export class Enemy {
     }
 
     // check collision enemy / planet
-    if (this.game.checkCollision(this, this.game.planet) && this.lives > 0) {
+    if (this.game.checkCollision(this, {...this.game.planet, radius: this.game.planet.radius * 0.8}) && this.lives > 0) {
       this.lives = 0;
       this.collided = true;
       this.game.lives--;
