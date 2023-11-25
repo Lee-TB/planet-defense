@@ -262,7 +262,7 @@ export class Game {
     this.soundVolume = parseInt(volume) / 100;
   }
 
-  setMusicVolume(volume) {    
+  setMusicVolume(volume) {
     this.music.volume = parseInt(volume) / 100;
   }
 }

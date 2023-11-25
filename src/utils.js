@@ -25,9 +25,11 @@ export function drawStartScreen(ctx, canvas) {
   );
 
   ctx.textAlign = "center";
-  ctx.fillStyle = "white";
+  ctx.fillStyle = "#445D48";
   ctx.font = `${48 * canvas.scale}px Impact`;
   ctx.fillText("Planet Defense", canvas.width / 2, canvas.height / 3);
+  ctx.fillStyle = "#D2DE32";
+  ctx.fillText("Planet Defense", canvas.width / 2+2, canvas.height / 3+2);
 
   ctx.font = `${32 * canvas.scale}px Consolas`;
   ctx.fillStyle = "black";

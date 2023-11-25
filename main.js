@@ -7,6 +7,7 @@ window.addEventListener("load", function () {
   const settingsButton = document.getElementById("settingsButton");
   const settingsMenu = document.getElementById("settingsMenu");
   const resumeButton = document.getElementById("resumeButton");
+  const restartButton = document.getElementById("restartButton");
   const soundEffectVolume = document.getElementById("soundEffectVolume");
   const musicVolume = document.getElementById("musicVolume");
 
@@ -15,10 +16,10 @@ window.addEventListener("load", function () {
   canvas.width = 800 * canvas.scale;
   canvas.height = 800 * canvas.scale;
 
-  const game = new Game(canvas);
+  let game = new Game(canvas);
 
   let requestID;
-  let lastTime = 0;    
+  let lastTime = 0;
 
   function animate(timeStamp = 0) {
     const deltaTime = timeStamp - lastTime;
@@ -60,11 +61,20 @@ window.addEventListener("load", function () {
     game.pause = false;
   });
 
+  restartButton.addEventListener("click", () => {
+    if (window.confirm("Are you sure you want to restart game now?")) {
+      game.music.load();
+      game = new Game(canvas);
+      settingsMenu.style.display = "none";
+      settingsButton.style.display = "none";
+    }
+  });
+
   soundEffectVolume.addEventListener("change", (e) => {
-    game.setSoundVolume(e.target.value)
+    game.setSoundVolume(e.target.value);
   });
 
   musicVolume.addEventListener("input", (e) => {
-    game.setMusicVolume(e.target.value)
+    game.setMusicVolume(e.target.value);
   });
 });
