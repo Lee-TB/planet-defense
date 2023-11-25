@@ -27,11 +27,16 @@ window.addEventListener("load", function () {
 
     if (!game.start) drawStartScreen(ctx, canvas);
     if (game.start) {
-      if (!game.pause) {
-        game.render(ctx, deltaTime);
-        settingsButton.style.display = "block";
-        settingsMenu.style.display = "none";
+      if (game.pause) {
+        settingsMenu.style.display = "block";
+        settingsButton.style.display = "none";
       } else {
+        game.render(ctx, deltaTime);
+        settingsMenu.style.display = "none";
+        settingsButton.style.display = "block";
+      }
+
+      if (game.gameOver) {
         settingsMenu.style.display = "block";
         settingsButton.style.display = "none";
       }

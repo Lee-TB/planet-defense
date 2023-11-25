@@ -38,6 +38,8 @@ export class Game {
     this.gameOver = false;
     this.debug = false;
     this.timer = 0;
+    this.gameOverSound = document.getElementById("gameOverSound");
+    this.gameOverSound.soundReady = true;
     this.music = document.getElementById("gameMusic");
     this.music.loop = true;
     this.music.volume = 0.5;
@@ -75,7 +77,7 @@ export class Game {
   }
 
   render(context, deltaTime) {
-    this.timer += deltaTime;
+    if (!this.gameOver) this.timer += deltaTime;
 
     this.fps = 1000 / deltaTime; // this fps will be changed depending on your screen refresh rate
     this.speedModifier = (this.baseRefreshRate / this.fps) * this.scale;
@@ -178,7 +180,7 @@ export class Game {
     // Game lives
     for (let i = 0; i < this.lives; i++) {
       context.fillRect(
-        (20 + 12 * i) * this.scale,
+        (20 + 16 * i) * this.scale,
         170 * this.scale,
         8 * this.scale,
         20 * this.scale
@@ -187,7 +189,7 @@ export class Game {
     context.strokeStyle = "white";
     for (let i = 0; i < this.maxLives; i++) {
       context.strokeRect(
-        (20 + 12 * i) * this.scale,
+        (20 + 16 * i) * this.scale,
         170 * this.scale,
         8 * this.scale,
         20 * this.scale
@@ -196,13 +198,21 @@ export class Game {
 
     // Game result
     if (this.gameOver) {
+      this.music.pause();
+      if (this.gameOverSound.soundReady) {
+        this.gameOverSound.play();
+        this.gameOverSound.soundReady = false;
+      }
       let message1 = "End Game !";
       let message2 = `Your score is ${this.score}`;
       context.textAlign = "center";
       context.font = `${100 * this.scale}px Impact`;
-      context.fillStyle = "white";
+      context.fillStyle = "#0766AD";
+      context.fillText(message1, this.width / 2, 300 * this.scale);
+      context.fillStyle = "#29ADB2";
+      context.fillText(message1, this.width / 2 + 2, 300 * this.scale + 2);
 
-      context.fillText(message1, this.width / 2, 200 * this.scale);
+      context.fillStyle = "white";
       context.fillText(message2, this.width / 2, 1000 * this.scale);
     }
     context.restore();
