@@ -10,7 +10,22 @@
     <div id="container">
       <div id="canvasWrapper">
         <canvas id="canvas1"></canvas>
-        <div id="settingButton"></div>
+        <div id="settingsButton"></div>
+        <div id="settingsMenu">
+          <div class="inner">
+            <button class="button" role="button" id="resumeButton">Resume Game</button>
+            <button class="button" role="button" id="fullscreenButton">Full Screen</button>
+
+            <div class="menu-group">
+              <label for="musicVolume">Music</label>
+              <input type="range" id="musicVolume" min="0" max="100" />
+            </div>
+            <div class="menu-group">
+              <label for="soundEffectVolume">Sound</label>
+              <input type="range" id="soundEffectVolume" min="0" max="100" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -26,8 +41,12 @@
       </div>
       <div class="sounds">
         <audio src="./assets/sounds/Shoot_01.wav" id="playerShootSound"></audio>
-        <audio src="./assets/sounds/Explosion_02.wav" id="enemyExplosionSound"></audio>
+        <audio
+          src="./assets/sounds/Explosion_02.wav"
+          id="enemyExplosionSound"
+        ></audio>
         <audio src="./assets/sounds/Hit_02.wav" id="enemyHitSound"></audio>
+        <audio src="./assets//sounds/awake10_megaWall_Music.mp3" id="gameMusic"></audio>
       </div>
     </div>
 

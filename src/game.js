@@ -38,7 +38,12 @@ export class Game {
     this.gameOver = false;
     this.debug = false;
     this.timer = 0;
+    this.music = document.getElementById("gameMusic");
+    this.music.loop = true;
+    this.music.volume = 0.5;
     this.soundVolume = 0.5;
+    this.start = false;
+    this.pause = true;
 
     this.mouse = {
       x: 0,
@@ -57,7 +62,9 @@ export class Game {
     window.addEventListener("mousedown", (e) => {
       this.mouse.x = e.offsetX;
       this.mouse.y = e.offsetY;
-      this.player.shoot();
+      if (!this.pause) {
+        this.player.shoot();
+      }
     });
 
     window.addEventListener("keydown", (e) => {
@@ -249,5 +256,13 @@ export class Game {
     for (let i = 0; i < this.numberOfEnemies; i++) {
       if (this.enemyPool[i].free) return this.enemyPool[i];
     }
+  }
+
+  setSoundVolume(volume) {
+    this.soundVolume = parseInt(volume) / 100;
+  }
+
+  setMusicVolume(volume) {    
+    this.music.volume = parseInt(volume) / 100;
   }
 }
