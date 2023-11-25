@@ -6,6 +6,7 @@ window.addEventListener("load", function () {
   const ctx = canvas.getContext("2d");
   const settingsButton = document.getElementById("settingsButton");
   const settingsMenu = document.getElementById("settingsMenu");
+  const menuGroups = settingsMenu.querySelectorAll(".menu-group");
   const resumeButton = document.getElementById("resumeButton");
   const restartButton = document.getElementById("restartButton");
   const soundEffectVolume = document.getElementById("soundEffectVolume");
@@ -21,7 +22,7 @@ window.addEventListener("load", function () {
   let requestID;
   let lastTime = 0;
 
-  function animate(timeStamp = 0) {
+  function animate(timeStamp = 0) {    
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
 
@@ -39,6 +40,10 @@ window.addEventListener("load", function () {
       if (game.gameOver) {
         settingsMenu.style.display = "block";
         settingsButton.style.display = "none";
+        resumeButton.style.display = "none";
+        menuGroups.forEach((elem) => {
+          elem.style.display = "none";
+        });
       }
     }
 
@@ -70,12 +75,18 @@ window.addEventListener("load", function () {
     if (window.confirm("Are you sure you want to restart game now?")) {
       game.music.load();
       game = new Game(canvas);
+      game.setMusicVolume(musicVolume.value)
+      game.setSoundVolume(soundEffectVolume.value)
       settingsMenu.style.display = "none";
       settingsButton.style.display = "none";
+      resumeButton.style.display = "inline-flex";
+        menuGroups.forEach((elem) => {
+          elem.style.display = "flex";
+        });
     }
   });
 
-  soundEffectVolume.addEventListener("change", (e) => {
+  soundEffectVolume.addEventListener("input", (e) => {
     game.setSoundVolume(e.target.value);
   });
 
