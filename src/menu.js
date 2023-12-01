@@ -73,13 +73,15 @@ export class Menu {
     this.restartButton.addEventListener("click", () => {
       if (window.confirm("Are you sure you want to restart game now?")) {
         this.setGame(restartCallback());
-        this.game.music.load();
-        this.game.setMusicVolume(this.musicVolume.value);
-        this.game.setSoundVolume(this.soundEffectVolume.value);
-        this.game.autoShoot = this.autoShootSwitch.checked;
         this.settingsMenu.style.display = "none";
         this.settingsButton.style.display = "none";
         this.resumeButton.style.display = "inline-flex";
+        this.game.music.load();
+        this.game.music.pause();
+
+        this.game.setMusicVolume(this.musicVolume.value);
+        this.game.setSoundVolume(this.soundEffectVolume.value);
+        this.game.autoShoot = this.autoShootSwitch.checked;
         this.menuGroups.forEach((elem) => {
           elem.style.display = "flex";
         });

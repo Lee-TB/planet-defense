@@ -5,26 +5,39 @@
 }
 
 body {
-  background-color: #352F44;
+  background-color: #352f44;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
+  user-select: none;
+
+  /* stuff that sass won't compile to */
+  -webkit-touch-callout: none;
+  -khtml-user-select: none;
+}
+
+#canvasJoystick {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 #container {
   display: flex;
   justify-content: center;
- 
 }
 
-#canvasWrapper{
+#canvasWrapper {
   display: flex;
-  position: relative;  
+  position: relative;
 }
 
 #settingsButton {
   position: absolute;
+  z-index: 999;
   width: 2.5%;
   height: 2.5%;
   background-image: url(./assets/icons/cogwheel.png);
@@ -40,9 +53,10 @@ body {
 
 #settingsMenu {
   position: absolute;
+  z-index: 999;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);    
+  transform: translate(-50%, -50%);
   backdrop-filter: blur(20px);
   border: 2px solid rgba(255, 255, 255, 0.2509803922);
   color: white;
@@ -67,14 +81,14 @@ body {
 
 @keyframes rotation {
   from {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   to {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
-#canvas1 {   
+#canvas1 {
   cursor: url(./assets/images/crosshair.png) 16 16, auto;
 }
 
@@ -86,15 +100,16 @@ body {
 .button {
   align-items: center;
   appearance: none;
-  background-color: #FCFCFD;
+  background-color: #fcfcfd;
   border-radius: 4px;
   border-width: 0;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
   box-sizing: border-box;
-  color: #36395A;
+  color: #36395a;
   cursor: pointer;
   display: inline-flex;
-  font-family: "JetBrains Mono",monospace;
+  font-family: "JetBrains Mono", monospace;
   justify-content: center;
   line-height: 1;
   list-style: none;
@@ -106,26 +121,28 @@ body {
   position: relative;
   text-align: left;
   text-decoration: none;
-  transition: box-shadow .15s,transform .15s;
+  transition: box-shadow 0.15s, transform 0.15s;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
   white-space: nowrap;
-  will-change: box-shadow,transform;
+  will-change: box-shadow, transform;
   font-size: 18px;
 }
 
 .button:focus {
-  box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+  box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
 }
 
 .button:hover {
-  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
   transform: translateY(-2px);
 }
 
 .button:active {
-  box-shadow: #D6D6E7 0 3px 7px inset;
+  box-shadow: #d6d6e7 0 3px 7px inset;
   transform: translateY(2px);
 }
 
@@ -134,8 +151,6 @@ input[type="range"] {
 }
 
 /* Auto shoot switch */
-
-
 
 /* The switch - the box around the slider */
 :root {
@@ -172,10 +187,10 @@ input[type="range"] {
   width: var(--container-height);
   height: var(--container-height);
   position: absolute;
-  left: calc(50% - var(--container-height)/2 - 10px);
-  top: calc(50% - var(--container-height)/2);
+  left: calc(50% - var(--container-height) / 2 - 10px);
+  top: calc(50% - var(--container-height) / 2);
   border-radius: 50%;
-  background: #FFFFFF;
+  background: #ffffff;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
   transition: all 0.2s ease-out;
   cursor: pointer;
@@ -186,6 +201,6 @@ input[type="range"] {
 }
 
 .checkbox:checked + .switch .slider {
-  left: calc(50% - var(--container-height)/2 + 10px);
-  top: calc(50% - var(--container-height)/2);
+  left: calc(50% - var(--container-height) / 2 + 10px);
+  top: calc(50% - var(--container-height) / 2);
 }

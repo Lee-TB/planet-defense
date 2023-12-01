@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <canvas id="canvasJoystick"></canvas>
+
     <div id="container">
       <div id="canvasWrapper">
         <canvas id="canvas1"></canvas>
@@ -35,7 +37,7 @@
             <div class="menu-group">
               <label>Autoshoot</label>
               <div class="switch-container">
-                <input type="checkbox" class="checkbox" id="autoShootSwitch">
+                <input type="checkbox" class="checkbox" id="autoShootSwitch" />
                 <label class="switch" for="autoShootSwitch">
                   <span class="slider"></span>
                 </label>
@@ -67,6 +69,8 @@
         <audio
           src="./assets//sounds/awake10_megaWall_Music.mp3"
           id="gameMusic"
+          autoplay="true"
+          muted="true"
         ></audio>
       </div>
     </div>

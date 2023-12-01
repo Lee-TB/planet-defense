@@ -42,7 +42,7 @@ window.addEventListener("load", function () {
     if (e.key === "Enter") {
       game.start = true;
       game.pause = false;
-      game.music.play();
+      game.playMusic();
     }
 
     if (e.key === "Escape" && game.start) {
@@ -50,7 +50,32 @@ window.addEventListener("load", function () {
     }
   });
 
+  let startX, startY;
+  let starteSwiping = false;
+  if (game.isMobile) {
+    window.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
+      if (!starteSwiping && Math.hypot(dx, dy) > 100) {
+        starteSwiping = true;
+        game.start = true;
+        game.pause = false;
+        game.playMusic();
+        game.autoShoot = true;
+        menu.autoShootSwitch.checked = true;
+      }
+    });
+  }
+
   menu.onRestartGame(() => {
+    starteSwiping = false;
     game = new Game(canvas);
     return game;
   });

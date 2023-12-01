@@ -7,6 +7,8 @@ import { Beetlemorph } from "./enemy/beetlemorph.js";
 import { Rhinomorph } from "./enemy/rhinomorph.js";
 import { formatMinutes } from "./utils.js";
 import { Shrapnel } from "./shrapnel.js";
+import { Joystick } from "./joystick.js";
+import { mobileCheck } from "./detect-mobile-browser.js";
 
 export class Game {
   constructor(canvas) {
@@ -14,6 +16,8 @@ export class Game {
     this.scale = this.canvas.scale * 0.6;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
+
+    this.isMobile = mobileCheck();
 
     this.baseRefreshRate = 60; // you can choose 60 or 144 and adjust other properties
     this.fps = 60;
@@ -45,6 +49,7 @@ export class Game {
     this.gameOverSound = document.getElementById("gameOverSound");
     this.gameOverSound.soundReady = true;
     this.music = document.getElementById("gameMusic");
+    this.music.muted = false;
     this.music.loop = true;
     this.music.volume = 0.5;
     this.soundVolume = 0.5;
@@ -81,10 +86,14 @@ export class Game {
         this.debug = !this.debug;
       }
     });
+
+    this.joystick = new Joystick();
   }
 
   render(context, deltaTime) {
     if (!this.gameOver) this.timer += deltaTime;
+
+    this.joystick.draw();
 
     this.handleAutoShoot(deltaTime);
 
@@ -310,5 +319,10 @@ export class Game {
 
   setMusicVolume(volume) {
     this.music.volume = parseInt(volume) / 100;
+  }
+
+  playMusic() {
+    this.music.muted = false;
+    this.music.play();
   }
 }

@@ -10,6 +10,7 @@ export class Player {
     this.angle = Math.PI * 0;
     this.damage = 1;
   }
+
   draw(context) {
     context.save();
     context.translate(this.x, this.y);
@@ -30,14 +31,26 @@ export class Player {
   }
 
   update() {
-    this.aim = this.game.calcAim(this.game.mouse, this.game.planet);
+    if (this.game.isMobile) {
+      if (this.game.joystick.angle) {
+        this.aim = {
+          aimX: Math.cos(this.game.joystick.angle),
+          aimY: Math.sin(this.game.joystick.angle),
+        };
+        this.angle = this.game.joystick.angle;
+        this.angle += Math.PI;
+      }
+    } else {
+      this.aim = this.game.calcAim(this.game.mouse, this.game.planet);
+      this.angle = Math.atan2(this.aim.dy, this.aim.dx);
+      this.angle += Math.PI;
+    }
     this.x =
       this.game.planet.x +
       (this.game.planet.radius * 0.8 + this.radius) * this.aim.aimX;
     this.y =
       this.game.planet.y +
       (this.game.planet.radius * 0.8 + this.radius) * this.aim.aimY;
-    this.angle = Math.atan2(this.aim.dy * -1, this.aim.dx * -1);
   }
 
   shoot() {
