@@ -6,6 +6,7 @@ import { Asteroid } from "./enemy/asteroid.js";
 import { Beetlemorph } from "./enemy/beetlemorph.js";
 import { Rhinomorph } from "./enemy/rhinomorph.js";
 import { formatMinutes } from "./utils.js";
+import { Shrapnel } from "./shrapnel.js";
 
 export class Game {
   constructor(canvas) {
@@ -20,6 +21,9 @@ export class Game {
     this.projectilePool = [];
     this.numberOfProjectiles = 30;
     this.createProjectilePool();
+    this.shrapnelPool = [];
+    this.numberOfShrapnels = 100;
+    this.createShrapnelPool();
 
     this.enemyPool = [];
     this.numberOfEnemies = 40;
@@ -112,6 +116,11 @@ export class Game {
     this.enemyPool.forEach((enemy) => {
       enemy.draw(context);
       enemy.update();
+    });
+
+    this.shrapnelPool.forEach((shrapnel) => {
+      shrapnel.draw(context);
+      shrapnel.update();
     });
 
     // periodically activate an enemy
@@ -244,6 +253,18 @@ export class Game {
   getProjectile() {
     for (let i = 0; i < this.numberOfProjectiles; i++) {
       if (this.projectilePool[i].free) return this.projectilePool[i];
+    }
+  }
+
+  createShrapnelPool() {
+    for (let i = 0; i < this.numberOfShrapnels; i++) {
+      this.shrapnelPool.push(new Shrapnel(this));
+    }
+  }
+
+  getShrapnel() {
+    for (let i = 0; i < this.numberOfShrapnels; i++) {
+      if (this.shrapnelPool[i].free) return this.shrapnelPool[i];
     }
   }
 

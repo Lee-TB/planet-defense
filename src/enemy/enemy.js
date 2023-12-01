@@ -102,7 +102,13 @@ export class Enemy {
     }
 
     // check collision enemy / planet
-    if (this.game.checkCollision(this, {...this.game.planet, radius: this.game.planet.radius * 0.8}) && this.lives > 0) {
+    if (
+      this.game.checkCollision(this, {
+        ...this.game.planet,
+        radius: this.game.planet.radius * 0.8,
+      }) &&
+      this.lives > 0
+    ) {
       this.lives = 0;
       this.collided = true;
       this.game.lives--;
@@ -124,6 +130,12 @@ export class Enemy {
         this.game.checkCollision(this, projectile) &&
         this.lives > 0
       ) {
+        for (let i = 0; i < 5; i++) {
+          const shrapnel = this.game.getShrapnel();
+          if (shrapnel)
+            shrapnel.start(projectile.x, projectile.y, projectile.radius / 3);
+        }
+
         projectile.reset();
         this.hit(this.game.player.damage);
       }
@@ -145,7 +157,8 @@ export class Enemy {
   }
 
   playExplosion() {
-    if(this.enemyExplosionSound.soundReady) { // soundReady make sure this audio run only one time
+    if (this.enemyExplosionSound.soundReady) {
+      // soundReady make sure this audio run only one time
       this.enemyExplosionSound.soundReady = false;
       this.enemyExplosionSound.volume = this.game.soundVolume;
       this.enemyExplosionSound.play();
