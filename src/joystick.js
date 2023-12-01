@@ -1,4 +1,4 @@
-import { mobileCheck } from "./detect-mobile-browser";
+import { mobileCheck } from "./detect-mobile-browser.js";
 
 export class Joystick {
   constructor() {
