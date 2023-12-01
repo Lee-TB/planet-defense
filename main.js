@@ -1,17 +1,10 @@
 import { Game } from "./src/game.js";
+import { Menu } from "./src/menu.js";
 import { drawStartScreen } from "./src/utils.js";
 
 window.addEventListener("load", function () {
   const canvas = document.getElementById("canvas1");
   const ctx = canvas.getContext("2d");
-  const settingsButton = document.getElementById("settingsButton");
-  const settingsMenu = document.getElementById("settingsMenu");
-  const menuGroups = settingsMenu.querySelectorAll(".menu-group");
-  const resumeButton = document.getElementById("resumeButton");
-  const restartButton = document.getElementById("restartButton");
-  const soundEffectVolume = document.getElementById("soundEffectVolume");
-  const musicVolume = document.getElementById("musicVolume");
-  const autoShootSwitch = document.getElementById("autoShootSwitch");
 
   const scale = Math.min(800, window.innerWidth, window.innerHeight) / 800;
   canvas.scale = scale;
@@ -19,38 +12,31 @@ window.addEventListener("load", function () {
   canvas.height = 800 * canvas.scale;
 
   let game = new Game(canvas);
+  const menu = Menu.getInstance();
+  menu.setGame(game);
 
-  let requestID;
   let lastTime = 0;
-
-  function animate(timeStamp = 0) {    
+  function animate(timeStamp = 0) {
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
 
     if (!game.start) drawStartScreen(ctx, canvas);
     if (game.start) {
       if (game.pause) {
-        settingsMenu.style.display = "block";
-        settingsButton.style.display = "none";
+        menu.open();
       } else {
         game.render(ctx, deltaTime);
-        settingsMenu.style.display = "none";
-        settingsButton.style.display = "block";
+        menu.close();
       }
 
       if (game.gameOver) {
-        settingsMenu.style.display = "block";
-        settingsButton.style.display = "none";
-        resumeButton.style.display = "none";
-        menuGroups.forEach((elem) => {
-          elem.style.display = "none";
-        });
+        menu.openGameOverMenu();
       }
     }
 
-    requestID = window.requestAnimationFrame(animate);
+    window.requestAnimationFrame(animate);
   }
-  requestID = window.requestAnimationFrame(animate);
+  window.requestAnimationFrame(animate);
 
   window.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -64,38 +50,8 @@ window.addEventListener("load", function () {
     }
   });
 
-  settingsButton.addEventListener("click", () => {
-    game.pause = true;
+  menu.onRestartGame(() => {
+    game = new Game(canvas);
+    return game;
   });
-
-  resumeButton.addEventListener("click", () => {
-    game.pause = false;
-  });
-
-  restartButton.addEventListener("click", () => {
-    if (window.confirm("Are you sure you want to restart game now?")) {
-      game.music.load();
-      game = new Game(canvas);
-      game.setMusicVolume(musicVolume.value)
-      game.setSoundVolume(soundEffectVolume.value)
-      settingsMenu.style.display = "none";
-      settingsButton.style.display = "none";
-      resumeButton.style.display = "inline-flex";
-        menuGroups.forEach((elem) => {
-          elem.style.display = "flex";
-        });
-    }
-  });
-
-  soundEffectVolume.addEventListener("input", (e) => {
-    game.setSoundVolume(e.target.value);
-  });
-
-  musicVolume.addEventListener("input", (e) => {
-    game.setMusicVolume(e.target.value);
-  });
-
-  autoShootSwitch.addEventListener('change', (e)=>{
-    game.autoShoot = e.target.checked;
-  })
 });
