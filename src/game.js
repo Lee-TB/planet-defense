@@ -58,6 +58,9 @@ export class Game {
 
     this.planet = new Planet(this);
     this.player = new Player(this);
+    this.autoShoot = false;
+    this.shootTimer = 0;
+    this.shootInterval = 200;
 
     // event listeners
     window.addEventListener("mousemove", (e) => {
@@ -68,7 +71,7 @@ export class Game {
     window.addEventListener("mousedown", (e) => {
       this.mouse.x = e.offsetX;
       this.mouse.y = e.offsetY;
-      if (!this.pause) {
+      if (!this.pause && !this.autoShoot) {
         this.player.shoot();
       }
     });
@@ -83,6 +86,9 @@ export class Game {
   render(context, deltaTime) {
     if (!this.gameOver) this.timer += deltaTime;
 
+    this.handleAutoShoot(deltaTime);
+
+    // Calculate adapt speed
     this.fps = 1000 / deltaTime; // this fps will be changed depending on your screen refresh rate
     this.speedModifier = (this.baseRefreshRate / this.fps) * this.scale;
 
@@ -160,6 +166,15 @@ export class Game {
       context.moveTo(this.planet.x, this.planet.y);
       context.lineTo(this.mouse.x, this.mouse.y);
       context.stroke();
+    }
+  }
+
+  handleAutoShoot(deltaTime) {
+    if (this.autoShoot) {
+      if (this.shootTimer > this.shootInterval) {
+        this.shootTimer = 0;
+        this.player.shoot();
+      } else this.shootTimer += deltaTime;
     }
   }
 

@@ -61,6 +61,7 @@ body {
 .menu-group {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 20px;
 }
 
@@ -130,4 +131,61 @@ body {
 
 input[type="range"] {
   cursor: pointer;
+}
+
+/* Auto shoot switch */
+
+
+
+/* The switch - the box around the slider */
+:root {
+  --container-width: 26px;
+  --container-height: 16px;
+}
+
+.switch-container {
+  width: var(--container-width);
+  height: var(--container-height);
+  position: relative;
+}
+
+/* Hide default HTML checkbox */
+.checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.switch {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: #e9e9eb;
+  border-radius: var(--container-height);
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+/* The slider */
+.slider {
+  width: var(--container-height);
+  height: var(--container-height);
+  position: absolute;
+  left: calc(50% - var(--container-height)/2 - 10px);
+  top: calc(50% - var(--container-height)/2);
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+}
+
+.checkbox:checked + .switch {
+  background-color: #0074fd;
+}
+
+.checkbox:checked + .switch .slider {
+  left: calc(50% - var(--container-height)/2 + 10px);
+  top: calc(50% - var(--container-height)/2);
 }

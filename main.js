@@ -11,6 +11,7 @@ window.addEventListener("load", function () {
   const restartButton = document.getElementById("restartButton");
   const soundEffectVolume = document.getElementById("soundEffectVolume");
   const musicVolume = document.getElementById("musicVolume");
+  const autoShootSwitch = document.getElementById("autoShootSwitch");
 
   const scale = Math.min(800, window.innerWidth, window.innerHeight) / 800;
   canvas.scale = scale;
@@ -93,4 +94,8 @@ window.addEventListener("load", function () {
   musicVolume.addEventListener("input", (e) => {
     game.setMusicVolume(e.target.value);
   });
+
+  autoShootSwitch.addEventListener('change', (e)=>{
+    game.autoShoot = e.target.checked;
+  })
 });
