@@ -9,6 +9,9 @@ export class Lobstermorph extends Enemy {
     this.maxFrame = 13;
     this.maxLives = 8;
     this.lives = this.maxLives;
+    this.radius = 50 * this.game.scale;
+    this.width = this.radius * 2;
+    this.height = this.radius * 2;
   }
 
   update() {

@@ -39,7 +39,7 @@ export class Shrapnel {
       context.save();
       context.beginPath();
       context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      context.fillStyle = "gold";
+      context.fillStyle = Math.random() < 0.5 ? "gold" : "white";
       context.fill();
       context.restore();
     }

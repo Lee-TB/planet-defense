@@ -9,5 +9,8 @@ export class Beetlemorph extends Enemy {
     this.maxFrame = 2;
     this.maxLives = 1;
     this.lives = this.maxLives;
+    this.radius = 30 * this.game.scale;
+    this.width = this.radius * 2;
+    this.height = this.radius * 2;
   }
 }
