@@ -12,6 +12,7 @@ export class Joystick {
     this.PI = Math.PI;
 
     this.angle;
+    this.radius = 50;
     this.positions = {
       // Here, fixed is the outer circle and inner is the small circle that moves
       fixedX: undefined,
@@ -74,16 +75,14 @@ export class Joystick {
 
     // If inner circle is outside joystick radius, reduce it to the circumference
     if (
-      !(
-        (x - this.positions.fixedX) ** 2 + (y - this.positions.fixedY) ** 2 <
-        10000
-      )
+      Math.hypot(x - this.positions.fixedX, y - this.positions.fixedY) >
+      this.radius
     ) {
       this.positions.innerX = Math.round(
-        Math.cos(this.angle) * 100 + this.positions.fixedX
+        Math.cos(this.angle) * this.radius + this.positions.fixedX
       );
       this.positions.innerY = Math.round(
-        Math.sin(this.angle) * 100 + this.positions.fixedY
+        Math.sin(this.angle) * this.radius + this.positions.fixedY
       );
     }
   }
@@ -110,7 +109,7 @@ export class Joystick {
     this.ctx.arc(
       this.positions.fixedX,
       this.positions.fixedY,
-      100,
+      this.radius,
       0,
       2 * this.PI
     );
@@ -126,7 +125,7 @@ export class Joystick {
     this.ctx.arc(
       this.positions.innerX,
       this.positions.innerY,
-      30,
+      this.radius / 2,
       0,
       2 * this.PI
     );
