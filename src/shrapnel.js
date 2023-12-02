@@ -13,12 +13,16 @@ export class Shrapnel {
     this.speedModifier = 5;
   }
 
-  start(x, y, projectileRadius) {
+  start(x, y, projectileAimX, projectileAimY, projectileRadius) {
     this.free = false;
     this.x = x;
     this.y = y;
     this.radius = projectileRadius * Math.random() * 0.5 + 0.5;
-    const { angleX, angleY } = this.getRandomAngle();
+
+    const { angleX, angleY } = this.getRandomAngle(
+      projectileAimX,
+      projectileAimY
+    );
     const randomSpeed = Math.random() + 0.5;
     this.speedX =
       angleX * randomSpeed * this.speedModifier * this.game.speedModifier;
@@ -58,10 +62,9 @@ export class Shrapnel {
     }
   }
 
-  getRandomAngle() {
-    this.aim = this.game.calcAim(this.game.mouse, this.game.planet);
-    const angle = Math.atan2(this.aim.dy, this.aim.dx);
-    const angleRange = (Math.PI * 1) / 6;
+  getRandomAngle(aimX, aimY) {
+    const angle = Math.atan2(aimY, aimX);
+    const angleRange = Math.PI;
     const randomAngle = Math.random() * angleRange - angleRange / 2;
     const angleX = Math.cos(angle + randomAngle);
     const angleY = Math.sin(angle + randomAngle);

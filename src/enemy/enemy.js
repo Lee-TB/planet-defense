@@ -133,7 +133,13 @@ export class Enemy {
         for (let i = 0; i < 5; i++) {
           const shrapnel = this.game.getShrapnel();
           if (shrapnel)
-            shrapnel.start(projectile.x, projectile.y, projectile.radius / 3);
+            shrapnel.start(
+              projectile.x,
+              projectile.y,
+              projectile.aimX,
+              projectile.aimY,
+              projectile.radius / 3
+            );
         }
 
         projectile.reset();

@@ -3,19 +3,24 @@ export class Projectile {
     this.game = game;
     this.x;
     this.y;
+    this.aimX;
+    this.aimY;
     this.speedX;
     this.speedY;
-    this.speedModifier = 10;    
+
+    this.speedModifier = 10;
     this.radius = 4 * this.game.scale;
     this.free = true;
   }
 
-  start(x, y, speedX, speedY) {
+  start(x, y, aimX, aimY) {
     this.free = false;
     this.x = x;
     this.y = y;
-    this.speedX = speedX * this.speedModifier * this.game.speedModifier;
-    this.speedY = speedY * this.speedModifier * this.game.speedModifier;
+    this.aimX = aimX;
+    this.aimY = aimY;
+    this.speedX = this.aimX * this.speedModifier * this.game.speedModifier;
+    this.speedY = this.aimY * this.speedModifier * this.game.speedModifier;
   }
 
   reset() {
