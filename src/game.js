@@ -116,6 +116,7 @@ export class Game {
     );
 
     this.drawStatusText(context);
+    this.drawGameOver(context);
 
     this.planet.draw(context);
     this.planet.update();
@@ -228,16 +229,17 @@ export class Game {
         20 * this.scale
       );
     }
+    context.restore();
+  }
 
-    // Game result
+  drawGameOver(context) {
     if (this.gameOver) {
       this.music.pause();
-      if (this.gameOverSound.soundReady) {
-        this.gameOverSound.play();
-        this.gameOverSound.soundReady = false;
-      }
+      this.playGameOverSound();
       let message1 = "End Game !";
       let message2 = `Your score is ${this.score}`;
+
+      context.save();
       context.textAlign = "center";
       context.font = `${100 * this.scale}px Impact`;
       context.fillStyle = "#0766AD";
@@ -247,8 +249,8 @@ export class Game {
 
       context.fillStyle = "white";
       context.fillText(message2, this.width / 2, 1000 * this.scale);
+      context.restore();
     }
-    context.restore();
   }
 
   calcAim(a, b) {
@@ -322,7 +324,13 @@ export class Game {
   }
 
   playMusic() {
-    this.music.muted = false;
     this.music.play();
+  }
+
+  playGameOverSound() {
+    if (this.gameOverSound.soundReady) {
+      this.gameOverSound.play();
+      this.gameOverSound.soundReady = false;
+    }
   }
 }
